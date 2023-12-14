@@ -1519,6 +1519,9 @@ class plagiarism_plugin_turnitin extends plagiarism_plugin {
         $turnitinassignment = new turnitin_assignment(0);
         $turnitincourse = $turnitinassignment->create_tii_course($coursedata, $workflowcontext);
 
+        // If $modname is empty just return the basic turnitincourse.
+        // This is needed as from Moodle 4.3 defaultcompletion() will call definition() in modules
+        // which will have knock-on effects for modules enabled for turnitin.
         if ($modname === '') {
             return $turnitincourse;
         }
