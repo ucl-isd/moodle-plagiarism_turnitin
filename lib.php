@@ -1516,12 +1516,15 @@ class plagiarism_plugin_turnitin extends plagiarism_plugin {
     public function create_tii_course($cmid, $modname, $coursedata, $workflowcontext = "site") {
         global $CFG;
 
+        $turnitinassignment = new turnitin_assignment(0);
+        $turnitincourse = $turnitinassignment->create_tii_course($coursedata, $workflowcontext);
+
+        if ($modname === '') {
+            return $turnitincourse;
+        }
         // Create module object.
         $moduleclass = "turnitin_".$modname;
         $moduleobject = new $moduleclass;
-
-        $turnitinassignment = new turnitin_assignment(0);
-        $turnitincourse = $turnitinassignment->create_tii_course($coursedata, $workflowcontext);
 
         // Join all admins and instructors to the course in Turnitin if it was created.
         if (!empty($turnitincourse->turnitin_cid)) {
