@@ -794,7 +794,7 @@ class plagiarism_plugin_turnitin extends plagiarism_plugin {
                     'identifier' => $identifier],
                     'lastmodified DESC', '*', 0, 1);
                 $plagiarismfile = reset($plagiarismfiles);
-                $author = $plagiarismfile->userid;
+                $author = $plagiarismfile->userid ?? null;
                 $linkarray['userid'] = $author;
             } else {
                 // Get correct user id that submission is for rather than who submitted, this only affects file submissions
