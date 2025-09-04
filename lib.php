@@ -838,7 +838,10 @@ class plagiarism_plugin_turnitin extends plagiarism_plugin {
                   } else {
                       $quizattemptclass = 'quiz_attempt';
                   }
-                  $attempt = $quizattemptclass::create($linkarray["area"]);
+                  // Issue #879 possible fix.
+                  // Method mod_quiz\local\reports\attempts_report_table->plagiarism_get_links() passes usage ID not attempt ID.
+                  $attempt = $quizattemptclass::create_from_usage_id($linkarray["area"]);
+                  // $attempt = $quizattemptclass::create($linkarray["area"]);
 
                   $identifier = sha1('quiz_attempt user'.$attempt->get_userid().' cm'.$cm->id.
                                      ' slot'.$linkarray["itemid"].' attempt'.$attempt->get_attempt_number());
