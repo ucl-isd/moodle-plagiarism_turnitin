@@ -954,11 +954,19 @@ class plagiarism_plugin_turnitin extends plagiarism_plugin {
                     if ($moduledata->usegroups) {
                         $coursework = new \mod_coursework\models\coursework($moduledata->id);
 
-                        $user = $DB->get_record('user', ['id' => $linkarray["userid"]]);
-                        $user = mod_coursework\models\user::find($user);
-                        if ($group = $coursework->get_student_group($user)) {
-                            $users = groups_get_members($group->id);
-                            $submissionusers = array_keys($users);
+                        // If we are using UCL coursework plugin from December 2025, we can pass user ID instead of user to save DB queries.
+                        if (
+                            method_exists($coursework, 'get_group_from_user_id')
+                            && $group = $coursework->get_group_from_user_id($linkarray["userid"])
+                        ) {
+                            $submissionusers = groups_get_members($group->id());
+                        } else {
+                            $user = $DB->get_record('user', ['id' => $linkarray["userid"]]);
+                            $user = mod_coursework\models\user::find($user);
+                            if ($group = $coursework->get_student_group($user)) {
+                                $submissionusers = array_keys(groups_get_members($group->id));
+                            }
+
                         }
                     }
             }
